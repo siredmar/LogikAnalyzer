@@ -19,6 +19,7 @@
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
 #include <QtGui/QWidget>
+#include "qcustomplot.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -34,6 +35,7 @@ public:
     QLabel *lbl_Baudrate;
     QLabel *label_2;
     QLabel *lbl_SerialPort;
+    QCustomPlot *customPlot;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuLogging;
@@ -65,6 +67,9 @@ public:
         lbl_SerialPort = new QLabel(centralWidget);
         lbl_SerialPort->setObjectName(QString::fromUtf8("lbl_SerialPort"));
         lbl_SerialPort->setGeometry(QRect(430, 331, 59, 14));
+        customPlot = new QCustomPlot(centralWidget);
+        customPlot->setObjectName(QString::fromUtf8("customPlot"));
+        customPlot->setGeometry(QRect(50, 40, 571, 251));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));

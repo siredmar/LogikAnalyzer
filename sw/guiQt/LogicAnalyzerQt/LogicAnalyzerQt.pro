@@ -27,11 +27,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     settingsdialog.cpp \
-    signal.cpp
+    signal.cpp \
+    linepainter.cpp \
+    qcustomplot.cpp
 
 HEADERS  += mainwindow.h \
     settingsdialog.h \
-    signal.h
+    signal.h \
+    linepainter.h \
+    qcustomplot.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui

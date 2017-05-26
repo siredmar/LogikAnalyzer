@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QString>
 #include <qextserialport.h>
+#include "linepainter.h"
 
 namespace Ui {
 class MainWindow;
@@ -33,12 +34,15 @@ private slots:
     void onReadyRead();
 
 private:
+    Linepainter line;
     struct MeasurementResponse
     {
         QString str;
         int timestamp;
-        int value;
+        quint8 value;
     };
+
+    signal newsig[8];
 
     bool SerialPortOpen;
     QextSerialPort *port;
@@ -47,6 +51,7 @@ private:
     Ui::MainWindow *ui;
     QString CalculateBaudrateFromIndex(int index);
     MeasurementResponse ParseSerialData(QByteArray *buf);
+    void AddPointToLineAndPlot(quint8 data, int channel);
 };
 
 #endif // MAINWINDOW_H

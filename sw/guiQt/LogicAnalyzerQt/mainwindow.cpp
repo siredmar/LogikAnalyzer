@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <cstdio>
 #include <sstream>
+#include <linepainter.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -113,13 +114,27 @@ void MainWindow::onReadyRead()
     bytes.resize(a);
     port->read(bytes.data(), bytes.size());
     MeasurementResponse response = ParseSerialData(&bytes);
-    std::cout << "Response: " << response.timestamp << ": " << response.value << std::endl;
+    std::cout << "Response: " << response.timestamp << ": " << (int)response.value << std::endl;
+    AddPointToLineAndPlot(response.value, 0);
+    AddPointToLineAndPlot(response.value, 1);
+    AddPointToLineAndPlot(response.value, 2);
+    AddPointToLineAndPlot(response.value, 3);
+    AddPointToLineAndPlot(response.value, 4);
+    AddPointToLineAndPlot(response.value, 5);
+    AddPointToLineAndPlot(response.value, 6);
+    AddPointToLineAndPlot(response.value, 7);
 }
 
 void MainWindow::on_actionStart_triggered()
 {
     if(SerialPortOpen == false)
     {
+        SerialPortOpen = true;
+        ConnectToSerial();
+    }
+    else
+    {
+        port->close();
         SerialPortOpen = true;
         ConnectToSerial();
     }
@@ -132,6 +147,9 @@ void MainWindow::on_actionStop_triggered()
         port->close();
         SerialPortOpen = false;
     }
+
+
+    line.Clear(this->ui->customPlot);
 }
 
 MainWindow::MeasurementResponse MainWindow::ParseSerialData(QByteArray *buf)
@@ -154,4 +172,14 @@ std::string MainWindow::IntToHexString(int number)
     ss<< std::hex << number; // int decimal_value
     std::string res ( ss.str() );
     return res;
+}
+
+void MainWindow::AddPointToLineAndPlot(quint8 data, int channel)
+{
+    double y = (double)(((data >> channel)) & 0x01);
+    double x = newsig[channel].getNumberOfPoints() + 1;
+    newsig[channel].AddPoint(x, y+channel);
+
+    line.setLineIndex(channel);
+    line.PaintLine(this->ui->customPlot, newsig[channel], channel);
 }
